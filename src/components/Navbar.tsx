@@ -1,8 +1,13 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { 
+  Sheet, 
+  SheetContent, 
+  SheetTrigger,
+  SheetTitle 
+} from "@/components/ui/sheet";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -64,7 +69,8 @@ const Navbar = () => {
               </button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[250px] sm:w-[300px]">
-              <div className="mt-10 flex flex-col gap-6">
+              <SheetTitle className="text-xl mb-6">Меню</SheetTitle>
+              <div className="flex flex-col gap-6">
                 <NavLinks />
               </div>
             </SheetContent>
