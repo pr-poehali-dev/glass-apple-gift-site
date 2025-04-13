@@ -1,8 +1,12 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { Menu, X } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,6 +21,29 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const NavLinks = () => (
+    <>
+      <Link 
+        to="/" 
+        className="text-apple-text hover:text-apple-blue transition-colors duration-200"
+      >
+        Главная
+      </Link>
+      <Link 
+        to="/products" 
+        className="text-apple-text hover:text-apple-blue transition-colors duration-200"
+      >
+        Карты
+      </Link>
+      <Link 
+        to="/how-to-use" 
+        className="text-apple-text hover:text-apple-blue transition-colors duration-200"
+      >
+        Как использовать
+      </Link>
+    </>
+  );
+
   return (
     <nav className={`sticky top-0 z-50 transition-all duration-300 ${
       scrolled ? 'glass' : 'bg-transparent'
@@ -26,26 +53,27 @@ const Navbar = () => {
           Apple Gift
         </Link>
         
-        <div className="flex items-center gap-8">
-          <Link 
-            to="/" 
-            className="text-apple-text hover:text-apple-blue transition-colors duration-200"
-          >
-            Главная
-          </Link>
-          <Link 
-            to="/products" 
-            className="text-apple-text hover:text-apple-blue transition-colors duration-200"
-          >
-            Карты
-          </Link>
-          <Link 
-            to="/how-to-use" 
-            className="text-apple-text hover:text-apple-blue transition-colors duration-200"
-          >
-            Как использовать
-          </Link>
-        </div>
+        {isMobile ? (
+          <Sheet>
+            <SheetTrigger asChild>
+              <button 
+                aria-label="Открыть меню" 
+                className="text-apple-text hover:text-apple-blue"
+              >
+                <Menu size={24} />
+              </button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[250px] sm:w-[300px]">
+              <div className="mt-10 flex flex-col gap-6">
+                <NavLinks />
+              </div>
+            </SheetContent>
+          </Sheet>
+        ) : (
+          <div className="flex items-center gap-8">
+            <NavLinks />
+          </div>
+        )}
       </div>
     </nav>
   );
