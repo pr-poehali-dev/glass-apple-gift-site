@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Menu } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -6,12 +6,20 @@ import {
   Sheet, 
   SheetContent, 
   SheetTrigger,
-  SheetTitle 
+  SheetTitle,
+  SheetClose
 } from "@/components/ui/sheet";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const isMobile = useIsMobile();
+  const location = useLocation();
+
+  // Закрываем сайдбар при изменении маршрута
+  useEffect(() => {
+    setIsSheetOpen(false);
+  }, [location.pathname]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,23 +34,26 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const NavLinks = () => (
+  const NavLinks = ({ onLinkClick }: { onLinkClick?: () => void }) => (
     <>
       <Link 
         to="/" 
         className="text-apple-text hover:text-apple-blue transition-colors duration-200"
+        onClick={onLinkClick}
       >
         Главная
       </Link>
       <Link 
         to="/products" 
         className="text-apple-text hover:text-apple-blue transition-colors duration-200"
+        onClick={onLinkClick}
       >
         Карты
       </Link>
       <Link 
         to="/how-to-use" 
         className="text-apple-text hover:text-apple-blue transition-colors duration-200"
+        onClick={onLinkClick}
       >
         Как использовать
       </Link>
@@ -59,7 +70,7 @@ const Navbar = () => {
         </Link>
         
         {isMobile ? (
-          <Sheet>
+          <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
               <button 
                 aria-label="Открыть меню" 
@@ -71,7 +82,7 @@ const Navbar = () => {
             <SheetContent side="right" className="w-[250px] sm:w-[300px]">
               <SheetTitle className="text-xl mb-6">Меню</SheetTitle>
               <div className="flex flex-col gap-6">
-                <NavLinks />
+                <NavLinks onLinkClick={() => setIsSheetOpen(false)} />
               </div>
             </SheetContent>
           </Sheet>
